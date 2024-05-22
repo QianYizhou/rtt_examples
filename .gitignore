@@ -1,1 +1,7 @@
 export
+
+# orocos build and execute result
+**/build
+**/install
+**/.tb_history
+**/orocos.log
