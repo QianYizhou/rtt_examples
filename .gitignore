@@ -5,3 +5,7 @@ export
 **/install
 **/.tb_history
 **/orocos.log
+
+# clangd
+compile_commands.json
+**/.cache
