@@ -48,7 +48,7 @@ do
 
   mkdir -p build
   cd build
-  cmake .. -DCMAKE_INSTALL_PREFIX=$(pwd)/../../install
+  cmake .. -DCMAKE_INSTALL_PREFIX=$(pwd)/../../install -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
   make install
 done
 
