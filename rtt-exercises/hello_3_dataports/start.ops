@@ -8,7 +8,7 @@ loadComponent("world","Example::World")
 
 var double period = 0.5
 var int priority  = 0
-setActivity("hello", period, priority , ORO_SCHED_OTHER )
+// setActivity("hello", period, priority , ORO_SCHED_OTHER )
 setActivity("world", period, priority , ORO_SCHED_OTHER )
 
 // Exercise: Create a ConnPolicy variable and fill in the

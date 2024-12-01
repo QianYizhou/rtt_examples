@@ -112,7 +112,7 @@ namespace Example
         {
             this->addAttribute("read_helper", read_helper);
             this->ports()->addPort( output ).doc("Data producing port.");
-            this->ports()->addPort( input ).doc("Data consuming port.");
+            this->ports()->addEventPort( input ).doc("Data consuming port.");
         }
 
         void updateHook()
@@ -123,7 +123,7 @@ namespace Example
                 return;
             }
 
-            while (input.read( read_helper ) == NewData) {
+            if (input.read( read_helper ) == NewData) {
                 // output.write( read_helper );
                 printf("Hello::updateHook() - read_helper = %f\n", read_helper);
             }
