@@ -117,6 +117,17 @@ namespace Example
 
         void updateHook()
         {
+            printf("Hello::updateHook()\n");
+            if (!input.connected()) {
+                printf("Hello::updateHook() - input port not connected\n");
+                return;
+            }
+
+            while (input.read( read_helper ) == NewData) {
+                // output.write( read_helper );
+                printf("Hello::updateHook() - read_helper = %f\n", read_helper);
+            }
+
         }
     };
 
@@ -147,6 +158,7 @@ namespace Example
 		}
 
 		void updateHook() {
+            printf("World::updateHook()\n");
 			output.write( value );
 			++value;
 		}

@@ -87,7 +87,7 @@ namespace Example
         }
 
         void updateHook() {
-            //cout << "."<<endl;
+            cout << "."<<endl;
         }
     public:
         /**

@@ -58,13 +58,36 @@ namespace Example
         {
         }
 
-        void updateHook()
+        bool configureHook() override
+        {
+            log(Info) << "Configure !" <<endlog();
+            printf("configureHook() called !\n");
+        	return true;
+        }
+
+        void cleanupHook() override
+        {
+        	log(Info) << "Cleanup !" <<endlog();
+            printf("cleanupHook() called !\n");
+        }
+
+        bool startHook() override
+        {
+        	log(Info) << "Start !" <<endlog();
+            printf("startHook() called !\n");
+        	return true;
+        }
+
+        void updateHook() override
         {
         	log(Info) << "Update !" <<endlog();
+            printf("updateHook() called !\n");
         }
-        bool configureHook()
+
+        void stopHook() override
         {
-        	return true;
+        	log(Info) << "Stop !" <<endlog();
+            printf("stopHook() called !\n");
         }
     };
 }

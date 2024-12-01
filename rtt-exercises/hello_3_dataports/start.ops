@@ -16,5 +16,7 @@ setActivity("world", period, priority , ORO_SCHED_OTHER )
 // buffer of size 10.
 connect("world.output","hello.input", ConnPolicy() )
 
+world.configure()
+world.start()
 hello.configure()
 hello.start()
