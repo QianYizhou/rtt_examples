@@ -14,4 +14,7 @@ setActivity("world", period, LowestPriority , ORO_SCHED_OTHER )
 connectPeers("hello","world")
 
 hello.configure()
-hello.start()
+// hello.start()
+
+world.configure()
+world.start()

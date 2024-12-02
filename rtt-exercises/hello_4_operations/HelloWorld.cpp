@@ -5,6 +5,7 @@
  * a 'hello world' example.
  */
 
+#include <thread>
 #include <rtt/Logger.hpp>
 #include <rtt/TaskContext.hpp>
 
@@ -61,6 +62,7 @@ namespace Example
          * Returns a string.
          */
         string getMessage() {
+            printf("[TID: %lu] getMessage() called\n", std::hash<std::thread::id>{}(std::this_thread::get_id()));
             return "Hello World";
         }
         /** @} */
@@ -74,6 +76,13 @@ namespace Example
             : TaskContext(name)
         {
             this->addOperation("getMessage", &Hello::getMessage, this).doc("Returns a friendly word.");
+            this->addOperation("getMessageOwnThread", &Hello::getMessage, this, OwnThread).doc("Returns a friendly word.");
+            this->addOperation("getMessageClientThread", &Hello::getMessage, this, ClientThread).doc("Returns a friendly word.");
+        }
+
+        void updateHook() override
+        {
+            printf("Hello::updateHook()\n");
         }
 
     };
@@ -93,6 +102,8 @@ namespace Example
     	 * a member variable of your class.
     	 */
     	OperationCaller< string(void) > getMessage;
+    	OperationCaller< string(void) > getMessageClientThread;
+    	OperationCaller< string(void) > getMessageOwnThread;
 
     	/** @} */
 
@@ -100,10 +111,14 @@ namespace Example
     	World(std::string name)
 	  : TaskContext(name, PreOperational)
     	{
+            printf("World::World()\n");
     	}
 
     	bool configureHook() {
+            log(Info) << "Configuring World component" <<endlog();
+            printf("World::configureHook()\n");
 
+            printf("Pass LINE: %d\n", __LINE__);
 	    // Lookup the Hello component.
     	    TaskContext* peer = this->getPeer("hello");
     	    if ( !peer ) {
@@ -111,18 +126,58 @@ namespace Example
     	    	return false;
     	    }
 
+            printf("Pass LINE: %d\n", __LINE__);
+
     	    // It is best practice to lookup methods of peers in
     	    // your configureHook.
-    	    getMessage = peer->getOperation("getmessage");
+    	    getMessage = peer->getOperation("getMessage");
     	    if ( !getMessage.ready() ) {
     	    	log(Error) << "Could not find Hello.getMessage Operation!"<<endlog();
     	    	return false;
     	    }
+            printf("Pass LINE: %d\n", __LINE__);
+    	    getMessageClientThread = peer->getOperation("getMessageClientThread");
+    	    if ( !getMessageClientThread.ready() ) {
+    	    	log(Error) << "Could not find Hello.getMessage Operation!"<<endlog();
+    	    	return false;
+    	    }
+            printf("Pass LINE: %d\n", __LINE__);
+    	    getMessageOwnThread = peer->getOperation("getMessageOwnThread");
+    	    if ( !getMessageOwnThread.ready() ) {
+    	    	log(Error) << "Could not find Hello.getMessage Operation!"<<endlog();
+    	    	return false;
+    	    }
+            printf("Pass LINE: %d\n", __LINE__);
     	    return true;
     	}
 
     	void updateHook() {
+            printf("[TID: %lu] World::updateHoo()\n", std::hash<std::thread::id>{}(std::this_thread::get_id()));
+            // printf("World::updateHook()\n");
+            // auto data = getMessage();
+            // printf("World::updateHook() - data = %s\n", data.c_str());
+            // printf("World::updateHook() (clientThread) - data = %s\n", getMessageClientThread().c_str());
+
+            // This line would trigger error: possible deadlocks
+            // printf("World::updateHook() (OwnThread) - data = %s\n", getMessageOwnThread().c_str());
+
     		log(Info) << "Receiving from 'hello': " << getMessage() <<endlog();
+    		log(Info) << "Receiving from 'hello': " << getMessageClientThread() <<endlog();
+
+            // Will send a request to the Hello component to get the message
+            SendHandle<string(void)> handle = getMessageOwnThread.send();
+
+            // Will execute in Global engine thread (another thread)
+            SendHandle<string(void)> h2 = getMessageClientThread.send();
+
+            printf("\n");
+            // std::string rt_string;
+            // while (handle.collectIfDone(rt_string) == RTT::SendNotReady) {
+            //     sleep(1);
+            // }
+            // printf("World::updateHook() (OwnThread) - data = %s\n", rt_string.c_str());
+    		// log(Info) << "Receiving from 'hello': " << getMessageClientThread() <<endlog();
+    		// log(Info) << "Receiving from 'hello': " << getMessageOwnThread() <<endlog();
     	}
     };
 }
