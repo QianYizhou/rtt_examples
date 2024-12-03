@@ -4,6 +4,7 @@
 import("hello_3_dataports")
 
 loadComponent("hello","Example::Hello")
+loadComponent("helloInput2","Example::HelloInput2")
 loadComponent("world","Example::World")
 
 var double period = 0.5
@@ -15,9 +16,12 @@ setActivity("world", period, priority , ORO_SCHED_OTHER )
 // 'type', 'size' and 'lock_policy' fields to create a locked
 // buffer of size 10.
 connect("world.output","hello.input", ConnPolicy() )
+connect("world.output","helloInput2.input", ConnPolicy() )
 
 world.configure()
 world.start()
 hello.configure()
 // hello.start() is necessary to get data
 hello.start()
+helloInput2.configure()
+helloInput2.start()

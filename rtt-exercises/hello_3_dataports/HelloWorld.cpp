@@ -117,7 +117,7 @@ namespace Example
 
         void updateHook()
         {
-            printf("Hello::updateHook()\n");
+            // printf("Hello::updateHook()\n");
             if (!input.connected()) {
                 printf("Hello::updateHook() - input port not connected\n");
                 return;
@@ -126,6 +126,63 @@ namespace Example
             if (input.read( read_helper ) == NewData) {
                 // output.write( read_helper );
                 printf("Hello::updateHook() - read_helper = %f\n", read_helper);
+            }
+
+        }
+    };
+
+    class HelloInput2
+        : public TaskContext
+    {
+    protected:
+        /**
+         * @name Input-Output ports
+         * @{
+         */
+        /**
+         * OutputPorts publish data.
+         */
+        OutputPort<double> output;
+        /**
+         * InputPorts read data.
+         */
+        InputPort< double > input;
+        /** @} */
+
+        /**
+         * Since read() requires an argument, we provide this
+         * attribute to hold the read value.
+         */
+        double read_helper;
+    public:
+        /**
+         * This example sets the interface up in the Constructor
+         * of the component.
+         */
+        HelloInput2(std::string name)
+            : TaskContext(name, PreOperational),
+              // Name, initial value
+              output("output", 0.0),
+              // Name
+              input("input"),
+              read_helper(0.0)
+        {
+            this->addAttribute("read_helper", read_helper);
+            this->ports()->addPort( output ).doc("Data producing port.");
+            this->ports()->addEventPort( input ).doc("Data consuming port.");
+        }
+
+        void updateHook()
+        {
+            // printf("HelloInput2::updateHook()\n");
+            if (!input.connected()) {
+                printf("Hello::updateHook() - input port not connected\n");
+                return;
+            }
+
+            if (input.read( read_helper ) == NewData) {
+                // output.write( read_helper );
+                printf("HelloInput2::updateHook() - read_helper = %f\n", read_helper);
             }
 
         }
@@ -158,9 +215,36 @@ namespace Example
 		}
 
 		void updateHook() {
-            printf("World::updateHook()\n");
+            // printf("World::updateHook()\n");
 			output.write( value );
 			++value;
+		}
+	};
+
+    class WorldOutput2
+	: public TaskContext
+	{
+	protected:
+		/**
+		 * This port object must be connected to Hello's port.
+		 */
+		OutputPort<double> output;
+		/** @} */
+
+		double value;
+	public:
+		WorldOutput2(std::string name)
+		: TaskContext(name),
+		output("output"),
+		value( 0.0 )
+		{
+		  this->ports()->addPort( output ).doc("World's data producing port.");
+		}
+
+		void updateHook() {
+            // printf("World::updateHook()\n");
+			output.write( value );
+			--value;
 		}
 	};
 
@@ -168,5 +252,7 @@ namespace Example
 
 ORO_CREATE_COMPONENT_LIBRARY()
 ORO_LIST_COMPONENT_TYPE( Example::Hello )
+ORO_LIST_COMPONENT_TYPE( Example::HelloInput2 )
 ORO_LIST_COMPONENT_TYPE( Example::World )
+ORO_LIST_COMPONENT_TYPE( Example::WorldOutput2 )
 

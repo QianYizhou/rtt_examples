@@ -4,20 +4,29 @@
 import("hello_3_dataports")
 
 loadComponent("hello","Example::Hello")
+loadComponent("helloInput2","Example::HelloInput2")
 loadComponent("world","Example::World")
+loadComponent("worldOutput2","Example::WorldOutput2")
 
 var double period = 0.5
 var int priority  = 0
 // setActivity("hello", period, priority , ORO_SCHED_OTHER )
 setActivity("world", period, priority , ORO_SCHED_OTHER )
+setActivity("worldOutput2", period, priority , ORO_SCHED_OTHER )
 
 // Exercise: Create a ConnPolicy variable and fill in the
 // 'type', 'size' and 'lock_policy' fields to create a locked
 // buffer of size 10.
 connect("world.output","hello.input", ConnPolicy() )
+connect("world.output","helloInput2.input", ConnPolicy() )
+connect("worldOutput2.output","hello.input", ConnPolicy() )
+connect("worldOutput2.output","helloInput2.input", ConnPolicy() )
 
 world.configure()
 world.start()
+worldOutput2.configure()
+worldOutput2.start()
 hello.configure()
-// hello.start() is necessary to get data
 hello.start()
+helloInput2.configure()
+helloInput2.start()
