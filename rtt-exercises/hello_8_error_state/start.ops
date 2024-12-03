@@ -1,0 +1,12 @@
+// Start this script by using:
+// deployer-gnulinux -s start.ops -linfo
+
+// For ROS builds, we could also import using the package name.
+import("hello_8_error_state")
+
+loadComponent("hello","Example::Hello")
+
+var double period = 1
+setActivity("hello", period, LowestPriority , ORO_SCHED_OTHER )
+
+hello.start()

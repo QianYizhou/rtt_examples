@@ -111,6 +111,35 @@ namespace Example
             this->addAttribute("attribute", attribute);
             this->addConstant("constant", constant);
         }
+
+        void updateHook() override {
+            static std::string last_property = property;
+            static double last_attribute = attribute;
+            static std::string last_constant = constant;
+
+            if (last_property != property) {
+                printf("Property changed from %s to %s\n", last_property.c_str(), property.c_str());
+                last_property = property;
+            }
+            if (std::fabs(last_attribute - attribute) > 1e-6) {
+                printf("Attribute changed from %f to %f\n", last_attribute, attribute);
+                last_attribute = attribute;
+            }
+            if (last_constant != constant) {
+                printf("Constant changed from %s to %s\n", last_constant.c_str(), constant.c_str());
+                last_constant = constant;
+            }
+            // printf("updateHook() called ! property: %s, attribute: %f, constant: %s\n", property.c_str(), attribute, constant.c_str());
+
+            static int index = 0;
+
+            printf("updateHook called at index: %d\n", ++index);
+            log(Info) << "Update !" << index <<endlog();
+
+            if (index == 3) {
+                sleep(5);
+            }
+        }
     };
 }
 
