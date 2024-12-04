@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "cpf.dtd">
+<properties>
+  <simple name="i_param" type="long"><description>An integer parameter</description><value>5</value></simple>
+  <simple name="d_param" type="double"><description>A double parameter</description><value>-3</value></simple>
+  <struct name="SubBag" type="PropertyBag">
+     <description>A sub-bag</description>
+     <simple name="s_param" type="string"><description>A string parameter</description><value>The String</value></simple>
+     <simple name="b_param" type="boolean"><description>A boolean parameter</description><value>0</value></simple>
+  </struct>
+</properties>

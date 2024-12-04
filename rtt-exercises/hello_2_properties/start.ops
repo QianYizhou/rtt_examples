@@ -4,7 +4,9 @@
 // For ROS builds, we could also import using the package name.
 import("hello_2_properties")
 
+loadLibrary("rtt-marshalling")
 loadComponent("hello","Example::Hello")
+loadComponent("MyTask", "Example::MyTask")
 
 var double period = 0.5
 setActivity("hello", period, LowestPriority , ORO_SCHED_OTHER )

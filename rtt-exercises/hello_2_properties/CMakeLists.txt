@@ -34,6 +34,10 @@ orocos_component(HelloWorld HelloWorld.cpp) # ...you may add multiple source fil
 # See : http://www.orocos.org/wiki/orocos/toolchain/getting-started/cmake-and-building
 # for adding the target_link_libraries directive here.
 
+# Yizhou: important to follow the guide to add plugin
+find_package(OROCOS-RTT REQUIRED rtt-marshalling)
+target_link_libraries(HelloWorld ${OROCOS-RTT_RTT-MARSHALLING_LIBRARY})
+
 #
 # Makes this an installable/usable package for other packages.
 #

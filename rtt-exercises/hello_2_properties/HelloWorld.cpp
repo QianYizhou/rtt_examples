@@ -17,6 +17,7 @@
 #include <rtt/Property.hpp>
 #include <rtt/Attribute.hpp>
 #include <rtt/Component.hpp>
+#include <rtt/marsh/Marshalling.hpp>
 
 using namespace std;
 using namespace RTT;
@@ -141,6 +142,29 @@ namespace Example
             }
         }
     };
+
+    class MyTask : public RTT::TaskContext
+    {
+        int i_param = 5;
+        double d_param = -3.0;
+        RTT::PropertyBag sub_bag;
+        std::string s_param = "The String";
+        bool b_param = false;
+    public:
+        MyTask(std::string name)
+            : TaskContext(name)
+        {
+            this->addProperty("i_param", i_param).doc("An integer parameter");
+            this->addProperty("d_param", d_param).doc("A double parameter");
+            this->addProperty("SubBag", sub_bag).doc("A sub-bag");
+            sub_bag.addProperty("s_param", s_param).doc("A string parameter");
+            sub_bag.addProperty("b_param", b_param).doc("A boolean parameter");
+
+            this->getProvider<Marshalling>("marshalling")->writeProperties("hello2.xml");
+        }
+    };
 }
 
-ORO_CREATE_COMPONENT( Example::Hello )
+ORO_CREATE_COMPONENT_LIBRARY()
+ORO_LIST_COMPONENT_TYPE( Example::Hello )
+ORO_LIST_COMPONENT_TYPE( Example::MyTask )

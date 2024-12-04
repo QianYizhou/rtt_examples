@@ -176,6 +176,10 @@ int ORO_main(int argc, char** argv)
     // This is a bidirectional connection.
     connectPeers(&world, &hello );
 
+    // If not configure() and start(), could operate manually: World.configure, then World.start in TaskBrowser.
+    // world.configure();
+    // world.start();
+
     log(Info) << "**** Starting the TaskBrowser       ****" <<endlog();
     // Switch to user-interactive mode.
     TaskBrowser browser( &hello );
